@@ -49,8 +49,12 @@ class ProductList extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this.setState({ poducts: Seed.products})
+    }
+
     render() {
-        const products = this.state.products.sort((a, b) => b.votes > a.votes)
+        const products = this.state.products.sort((a, b) => b.votes - a.votes)
         const productComponents = products.map((product) => (
             <Product 
                     key={`product-${product.id}`}

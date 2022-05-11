@@ -1,7 +1,17 @@
+// transform-class-properties - feature of babel, who allows us use arrow function on the class,
+// and initialize properties outside constructor. This help us avoid use .bind(this) on custom methods and avoid use constructor 
+
 class Product extends React.Component {
-    constructor (props) {
-        super(props)
-        this.handleUpVote = this.handleUpVote.bind(this)
+    handleUpVote = () => {
+        this.props.onVoteUp(this.props.id)
+    }
+
+    handleDownVote = () => {
+        this.props.onVoteDown(this.props.id)
+    }
+
+    computedVoteCounterClass = () => {
+        return this.props.votes > 0 ? 'green' : 'red'
     }
 
     render() {
@@ -13,9 +23,12 @@ class Product extends React.Component {
                 <div className='middle aligned content'>
                     <div className='header'>
                         <a onClick={this.handleUpVote}>
-                            <i className='large caret up icon' />
+                            <i className='large caret up icon green' />
                         </a>
-                        {this.props.votes}
+                        <a onClick={this.handleDownVote}>
+                            <i className='large caret down icon red' />
+                        </a>
+                        <span className={this.computedVoteCounterClass()}>{this.props.votes}</span>
                     </div>
                     <div className='description'>
                         <a href={this.props.url}>
@@ -34,23 +47,49 @@ class Product extends React.Component {
             </div>
         )
     }
-
-    handleUpVote() {
-        this.props.onVote(this.props.id)
-    }
 }
 
 class ProductList extends React.Component {
-    constructor(props) {
-        super(props)
-
-        this.state = {
-            products: []
-        }
+    // Init component state
+    state = {
+        products: []
     }
 
+    // React life hook
     componentDidMount() {
-        this.setState({ poducts: Seed.products})
+        this.setState({ products: Seed.products })
+    }
+
+    handleProductUpVote = (productId) => {
+        // Copy products for new array becose state must be immuteble
+        const nextProducts = this.state.products.map((product) => {
+            if (product.id === productId) {
+                return Object.assign({}, product, {
+                    votes: product.votes + 1
+                })
+            }
+
+            return product
+        })
+
+        // Update state
+        this.setState({products: nextProducts})
+    }
+
+    handleProductDownVote = (productId) => {
+        // Copy products for new array becose state must be immuteble
+        const nextProducts = this.state.products.map((product) => {
+            if (product.id === productId) {
+                return Object.assign({}, product, {
+                    votes: product.votes - 1
+                })
+            }
+
+            return product
+        })
+
+        // Update state
+        this.setState({products: nextProducts})
     }
 
     render() {
@@ -65,7 +104,8 @@ class ProductList extends React.Component {
                     votes={product.votes}
                     submitterAvatarUrl={product.submitterAvatarUrl}
                     productImageUrl={product.productImageUrl}
-                    onVote={this.handleProductUpVote}
+                    onVoteUp={this.handleProductUpVote}
+                    onVoteDown={this.handleProductDownVote}
                 />
         ))
 
@@ -74,10 +114,6 @@ class ProductList extends React.Component {
                 {productComponents}
             </div>
         )
-    }
-
-    handleProductUpVote(productId) {
-        console.log(productId)
     }
 }
 

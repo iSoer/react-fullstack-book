@@ -2,6 +2,9 @@
 class ProductList extends React.Component {
   render() {
     const product = Seed.products[0];
+    const product1 = Seed.products[1];
+    const product2 = Seed.products[2];
+
     return (
       <div className='ui unstackable items'>
         <Product
@@ -13,6 +16,43 @@ class ProductList extends React.Component {
           submitterAvatarUrl={product.submitterAvatarUrl}
           productImageUrl={product.productImageUrl}
         />
+        <Product
+          id={product.id}
+          title={product.title}
+          description={product.description}
+          url={product.url}
+          votes={product.votes}
+          submitterAvatarUrl={product.submitterAvatarUrl}
+          productImageUrl={product.productImageUrl}
+        />
+        <Product
+          id={product.id}
+          title={product.title}
+          description={product.description}
+          url={product.url}
+          votes={product.votes}
+          submitterAvatarUrl={product.submitterAvatarUrl}
+          productImageUrl={product.productImageUrl}
+        />
+        <Product
+          id={product.id}
+          title={product.title}
+          description={product.description}
+          url={product.url}
+          votes={product.votes}
+          submitterAvatarUrl={product.submitterAvatarUrl}
+          productImageUrl={product.productImageUrl}
+        />
+        <Product
+          id={product.id}
+          title={product.title}
+          description={product.description}
+          url={product.url}
+          votes={product.votes}
+          submitterAvatarUrl={product.submitterAvatarUrl}
+          productImageUrl={product.productImageUrl}
+        />
+
       </div>
     );
   }

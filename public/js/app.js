@@ -49,6 +49,118 @@ class Product extends React.Component {
     }
 }
 
+class AddProductForm extends React.Component {
+    state = {}
+  
+    componentDidMount() {
+      this.resetState()
+    }
+  
+    initialState = () => {
+      return {
+        title: '',
+        description: '',
+        url: '',
+        votes: 0,
+        submitterAvatarUrl: '',
+        productImageUrl: '',
+      }
+    }
+  
+    resetState = () => {
+      this.setState(Object.assign({}, this.initialState()))
+    }
+  
+    handleProductUpVote = (event) => {
+      event.preventDefault()
+  
+      this.props.onAddNewProduct(Object.assign({}, this.state))
+      this.resetState()
+    }
+  
+    handleOnInput = (target) => (event) => {
+      const { target: {value} } = event
+      
+      this.setState({
+        [target]: value,
+      })
+    }
+  
+    render() {
+      return (
+        <form className="ui form">
+          <div className="field">
+            <label>Title</label>
+            <input 
+              type="text" 
+              name="title" 
+              placeholder="Title..."
+              value={this.state.title}
+              onChange={this.handleOnInput('title')}
+            />
+          </div>
+          <div className="field">
+            <label>Description</label>
+            <input 
+              type="text" 
+              name="description" 
+              placeholder="Description..." 
+              value={this.state.description}
+              onChange={this.handleOnInput('description')}
+            />
+          </div>
+          <div className="field">
+            <label>Url</label>
+            <input 
+              type="text" 
+              name="url" 
+              placeholder="Url..." 
+              value={this.state.url}
+              onChange={this.handleOnInput('url')}
+            />
+          </div>
+          <div className="field">
+            <label>Votes</label>
+            <input 
+              type="text" 
+              name="votes" 
+              placeholder="Votes..." 
+              value={this.state.votes}
+              onChange={this.handleOnInput('votes')}
+            />
+          </div>
+          <div className="field">
+            <label>Avatar Url</label>
+            <input 
+              type="text" 
+              name="submitterAvatarUrl" 
+              placeholder="Avatar url..." 
+              value={this.state.submitterAvatarUrl}
+              onChange={this.handleOnInput('submitterAvatarUrl')}
+            />
+          </div>
+          <div className="field">
+            <label>Image Url</label>
+            <input 
+              type="text" 
+              name="productImageUrl" 
+              placeholder="Image url..." 
+              value={this.state.productImageUrl}
+              onChange={this.handleOnInput('productImageUrl')}
+            />
+          </div>
+          <button 
+            className="ui primary button" 
+            type="submit"
+            onClick={this.handleProductUpVote}
+          >
+            Save
+          </button>
+        </form>
+      )
+    }
+  }
+
 class ProductList extends React.Component {
     // Init component state
     state = {
@@ -92,6 +204,19 @@ class ProductList extends React.Component {
         this.setState({products: nextProducts})
     }
 
+    handleAddNewProduct = (product) => {
+        product.id = this.state.products.length + 1
+        const updatedProducts = this.state.products.map((product) => {
+          return product
+        })
+        
+        updatedProducts.push(product)
+        
+        this.setState({
+          products: updatedProducts,
+        })
+      }
+
     render() {
         const products = this.state.products.sort((a, b) => b.votes - a.votes)
         const productComponents = products.map((product) => (
@@ -112,6 +237,7 @@ class ProductList extends React.Component {
         return (
             <div className='ui unstackable items'>
                 {productComponents}
+                <AddProductForm onAddNewProduct={this.handleAddNewProduct}/>
             </div>
         )
     }
